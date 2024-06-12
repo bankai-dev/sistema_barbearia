@@ -10,23 +10,37 @@ using System.Threading.Tasks;
 
 namespace sistema_barbearia.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AccountController : Controller
-    { 
+    {
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
 
         public AccountController(IUserService userService, ITokenService tokenService)
         {
-             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-            
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+
             _tokenService = tokenService;
+        }
+
+        [HttpGet("login")]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpGet("register")]
+        public IActionResult Register()
+        {
+            return View();
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
 
-            if (registerDto == null || string.IsNullOrEmpty(registerDto.Username) ||  string.IsNullOrEmpty(registerDto.Password) )
+            if (registerDto == null || string.IsNullOrEmpty(registerDto.Username) || string.IsNullOrEmpty(registerDto.Password))
             {
                 return BadRequest("Dados inválidos");
             }
@@ -56,7 +70,7 @@ namespace sistema_barbearia.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            if (loginDto != null || string.IsNullOrEmpty(loginDto.Username) || string.IsNullOrEmpty(loginDto.Password))
+            if (loginDto == null || string.IsNullOrEmpty(loginDto.Username) || string.IsNullOrEmpty(loginDto.Password))
             {
                 return BadRequest("Dados inválidos");
             }
@@ -65,11 +79,21 @@ namespace sistema_barbearia.Controllers
             if (authenticatedUser == null)
                 return Unauthorized("Invalid Username or Password");
 
-            return new UserDto
+            int userId = authenticatedUser.Id;
+
+
+            var userDto = new UserDto
             {
+                Id = userId,
                 Username = authenticatedUser.UserName,
                 Token = _tokenService.CreateToken(authenticatedUser)
             };
+
+            return Ok(new
+            {
+                User = userDto,
+                RedirectUrl = userId == 2 ? "/Listagem" : "/ListagemClientes"
+            });
         }
     }
 }

@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using sistema_barbearia.Data;
 using sistema_barbearia.Services;
 
@@ -30,6 +32,7 @@ builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
 
 var app = builder.Build();
 
+var loginUrl = "http://localhost:5078/api/account/login";
 
 
 if (app.Environment.IsDevelopment())
@@ -49,7 +52,19 @@ app.UseRouting();
 app.UseAuthorization();
 
 // app.UseHttpsRedirection();
+// app.MapDefaultControllerRoute();
+// app.MapControllers();
+// app.MapControllerRoute(
+//     name: "default",
+//     pattern: "{controller=Account}/{action=Login}");
+app.MapControllerRoute(
+    name: "default",
+    pattern: "/{controller=Account}/{action=Login}");
 
-app.MapControllers();
+Process.Start(new ProcessStartInfo
+{
+    FileName = loginUrl,
+    UseShellExecute = true
+});
 
 app.Run();

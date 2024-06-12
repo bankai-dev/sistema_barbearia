@@ -12,7 +12,6 @@ namespace sistema_barbearia.Models
             PasswordHash = Array.Empty<byte>();
             PasswordSalt = Array.Empty<byte>();
             Agendamentos = new List<Agendamento>();
-            AgendamentosComoBarbeiro = new List<Agendamento>();
         }
         [Key]
         public int Id { get; set; }
@@ -28,7 +27,6 @@ namespace sistema_barbearia.Models
 
         // Navigation properties
         public virtual ICollection<Agendamento> Agendamentos { get; set; }
-        public virtual ICollection<Agendamento> AgendamentosComoBarbeiro { get; set; }
 
     }
 }

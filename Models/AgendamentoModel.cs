@@ -5,8 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace sistema_barbearia.Models
 {
-
-
     public class Agendamento
     {
         public Agendamento()
@@ -14,7 +12,7 @@ namespace sistema_barbearia.Models
             Nome = string.Empty;
             TipoCorte = string.Empty;
             CreatedAt = DateTime.Now;
-            UpdatedAt = DateTime.Now;
+            Status = StatusAgendamento.Disponivel;
         }
 
         [Key]
@@ -32,21 +30,15 @@ namespace sistema_barbearia.Models
         [Required]
         public DateTime Horario { get; set; }
 
-        [Required]
         public StatusAgendamento Status { get; set; }
 
         // Foreign Key for User
         public int? UserId { get; set; }
         [ForeignKey("UserId")]
-        public virtual User? User { get; set; }
+        public User User { get; set; }
 
-        // Foreign Key for Barbeiro
-        public int? BarbeiroId { get; set; }
-        [ForeignKey("BarbeiroId")]
-        public virtual User? Barbeiro { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 
     public enum StatusAgendamento
@@ -56,5 +48,4 @@ namespace sistema_barbearia.Models
         Reservado,
         Cancelado
     }
-
 }

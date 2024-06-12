@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .header {
+            background-color: #5a0a1a;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .agendamentos-table {
+            table-layout: fixed;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table-wrapper {
+            max-height: 400px; /* Ajuste a altura máxima da tabela */
+            overflow-y: auto; /* Adicione barra de rolagem vertical */
+        }
+
+        .table-cell {
+            padding: 5px;
+            word-break: break-word;
+            max-width: 200px;
+            overflow-y: auto;
+            max-height: 200px;
+            position: relative;
+        }
+
+        .card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+            width: 120px;
+            height: 80px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            display: inline-block;
+            text-align: center; /* Centraliza o conteúdo da célula */
+        }
+
+        .card button {
+            font-size: 12px; /* Diminui o tamanho do texto do botão */
+            padding: 5px 10px; /* Adiciona um pouco de preenchimento ao botão */
+            margin-left: 5px; /* Adiciona margem à esquerda do botão */
+            background-color: gray; /* Remove o fundo colorido do botão */
+            border: none; /* Remove a borda do botão */
+            color: #ffffff; /* Define a cor do texto do botão */
+        }
+
+        .card button:hover {
+            text-decoration:dotted ; /* Adiciona sublinhado ao passar o mouse sobre o botão */
+        }
+
+        .card-attribute {
+            font-weight: bold;
+            display: block;
+            font-size: 0.7em;
+        }
+
+        .status-disponivel {
+            background-color: #28a745; /* Verde */
+            color: white;
+        }
+
+        .status-reservado {
+            background-color: #dc3545; /* Vermelho */
+            color: white;
+        }
+
+        .action-buttons {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 5px;
+        }
+
+        .cut-type-value {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1 style="margin-left: 30px;">Barbearia do Mendes</h1>
+    </div>
+
+    <div class="container">
+        <div class="table-wrapper">
+            <table class="table table-striped table-bordered agendamentos-table">
+                <thead>
+                    <tr>
+                        <th>Horário</th>
+                        <th>Segunda-feira</th>
+                        <th>Terça-feira</th>
+                        <th>Quarta-feira</th>
+                        <th>Quinta-feira</th>
+                        <th>Sexta-feira</th>
+                        <th>Sábado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Linhas de horários -->
+                    <script>
+                        for (let hour = 7; hour < 19; hour++) {
+                            for (let min = 0; min < 60; min += 30) {
+                                let time = ('0' + hour).slice(-2) + ':' + ('0' + min).slice(-2);
+                                document.write('<tr>');
+                                document.write('<td>' + time + '</td>');
+                                for (let day = 0; day < 6; day++) {
+                                    document.write('<td class="table-cell" data-time="' + time + '" data-day="' + day + '"></td>');
+                                }
+                                document.write('</tr>');
+                            }
+                        }
+                    </script>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="scheduleModal" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="scheduleModalLabel">Agendar Corte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="selectedTime"></p>
+                    <label for="cutType" class="form-label">Tipo de Corte:</label>
+                    <select id="cutType" class="form-select">
+                        <option value="30">Corte masculino</option>
+                        <option value="35">Corte feminino</option>
+                        <option value="25">Corte infantil</option>
+                        <option value="50">Corte + Barba</option>
+                    </select>
+                    <span id="cutValue" class="cut-type-value">$30</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="confirmSchedule">Confirmar Agendamento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('td.table-cell').each(function () {
+                const card = $('<div class="card status-disponivel">')
+                    .append('<p class="card-attribute">Disponível</p>')
+                    .append('<button class="btn btn-primary btn-sm" onclick="openScheduleModal(this)">Agendar</button>');
+                $(this).append(card);
+            });
+
+            $('#cutType').on('change', function () {
+                $('#cutValue').text('$' + $(this).val());
+            });
+
+            $('#confirmSchedule').on('click', function () {
+                const parentCell = $('.modal').data('parentCell');
+                parentCell.find('.card').removeClass('status-disponivel').addClass('status-reservado');
+                parentCell.find('.card-attribute').text('Reservado');
+                $('#scheduleModal').modal('hide');
+            });
+        });
+
+        function openScheduleModal(button) {
+            const parentCell = $(button).closest('.table-cell');
+            const time = parentCell.data('time');
+            const day = parentCell.data('day');
+            $('#selectedTime').text(`Horário: ${time}, Dia: ${day}`);
+            $('.modal').data('parentCell', parentCell);
+            $('#scheduleModal').modal('show');
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
+
+                            
