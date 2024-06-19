@@ -19,6 +19,10 @@ namespace sistema_barbearia.Data
                 .WithMany(u => u.Agendamentos) 
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Agendamento>()
+            .Property(a => a.Id)
+            .ValueGeneratedOnAdd();
         }
     }
 }

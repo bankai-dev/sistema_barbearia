@@ -24,8 +24,10 @@
         }
 
         .table-wrapper {
-            max-height: 400px; /* Ajuste a altura máxima da tabela */
-            overflow-y: auto; /* Adicione barra de rolagem vertical */
+            max-height: 400px;
+            /* Ajuste a altura máxima da tabela */
+            overflow-y: auto;
+            /* Adicione barra de rolagem vertical */
         }
 
         .table-cell {
@@ -47,20 +49,28 @@
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             font-size: 14px;
             display: inline-block;
-            text-align: center; /* Centraliza o conteúdo da célula */
+            text-align: center;
+            /* Centraliza o conteúdo da célula */
         }
 
         .card button {
-            font-size: 12px; /* Diminui o tamanho do texto do botão */
-            padding: 5px 10px; /* Adiciona um pouco de preenchimento ao botão */
-            margin-left: 5px; /* Adiciona margem à esquerda do botão */
-            background-color: gray; /* Remove o fundo colorido do botão */
-            border: none; /* Remove a borda do botão */
-            color: #ffffff; /* Define a cor do texto do botão */
+            font-size: 12px;
+            /* Diminui o tamanho do texto do botão */
+            padding: 5px 10px;
+            /* Adiciona um pouco de preenchimento ao botão */
+            margin-left: 5px;
+            /* Adiciona margem à esquerda do botão */
+            background-color: gray;
+            /* Remove o fundo colorido do botão */
+            border: none;
+            /* Remove a borda do botão */
+            color: #ffffff;
+            /* Define a cor do texto do botão */
         }
 
         .card button:hover {
-            text-decoration:dotted ; /* Adiciona sublinhado ao passar o mouse sobre o botão */
+            text-decoration: dotted;
+            /* Adiciona sublinhado ao passar o mouse sobre o botão */
         }
 
         .card-attribute {
@@ -70,12 +80,14 @@
         }
 
         .status-disponivel {
-            background-color: #28a745; /* Verde */
+            background-color: #28a745;
+            /* Verde */
             color: white;
         }
 
         .status-reservado {
-            background-color: #dc3545; /* Vermelho */
+            background-color: #dc3545;
+            /* Vermelho */
             color: white;
         }
 
@@ -145,10 +157,9 @@
                     <p id="selectedTime"></p>
                     <label for="cutType" class="form-label">Tipo de Corte:</label>
                     <select id="cutType" class="form-select">
-                        <option value="30">Corte masculino</option>
-                        <option value="35">Corte feminino</option>
-                        <option value="25">Corte infantil</option>
-                        <option value="50">Corte + Barba</option>
+                        <option value="25" data-description="Disfarçado">Disfarçado </option>
+                        <option value="35" data-description="Corte com barba">Corte com barba</option>
+                        <option value="15" data-description="Barba">Barba</option>
                     </select>
                     <span id="cutValue" class="cut-type-value">$30</span>
                 </div>
@@ -161,6 +172,24 @@
     </div>
 
     <script>
+        let userId  = localStorage.getItem('userId');;
+
+        if (!userId) {
+            alert('ID do usuário não encontrado. Por favor, faça login novamente.');
+            window.location.href = '/Account/Login';
+        }
+        
+        @* $.ajax({
+            url: '/api/account/getUserId',
+            type: 'GET',
+            success: function (data) {
+                userId = data.userId;
+            },
+            error: function (xhr, status, error) {
+                alert('Erro ao obter ID do usuário: ' + xhr.responseText);
+            }
+        }); *@
+
         $(document).ready(function () {
             $('td.table-cell').each(function () {
                 const card = $('<div class="card status-disponivel">')
@@ -175,9 +204,34 @@
 
             $('#confirmSchedule').on('click', function () {
                 const parentCell = $('.modal').data('parentCell');
-                parentCell.find('.card').removeClass('status-disponivel').addClass('status-reservado');
-                parentCell.find('.card-attribute').text('Reservado');
-                $('#scheduleModal').modal('hide');
+                const time = parentCell.data('time');
+                const day = parentCell.data('day');
+
+                const horario = calculateDateTime(time, day);
+                const tipoCorte = $('#cutType').val();
+                const tipoCorteDescription = $('#cutType option:selected').data('description');
+
+                const agendamentoDto = {
+                    TipoCorte: tipoCorteDescription,
+                    Horario: horario
+                };
+
+                $.ajax({
+                    url: `http://localhost:5078/api/Agendamento?userId=${userId}`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(agendamentoDto),
+                    success: function (response) {
+                        parentCell.find('.card').removeClass('status-disponivel').addClass('status-reservado');
+                        parentCell.find('.card-attribute').text('Reservado');
+                        $('#scheduleModal').modal('hide');
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.error);
+                        console.log(error);
+                        alert('Erro ao criar agendamento: ' + xhr.responseText);
+                    }
+                });
             });
         });
 
@@ -189,12 +243,14 @@
             $('.modal').data('parentCell', parentCell);
             $('#scheduleModal').modal('show');
         }
+
+        function calculateDateTime(time, day) {
+            const daysOfWeek = ['2024-06-17', '2024-06-18', '2024-06-19', '2024-06-20', '2024-06-21', '2024-06-22'];
+            return daysOfWeek[day] + 'T' + time + ':00';
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
-
-
-                            

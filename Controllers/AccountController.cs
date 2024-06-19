@@ -81,6 +81,7 @@ namespace sistema_barbearia.Controllers
 
             int userId = authenticatedUser.Id;
 
+            HttpContext.Session.SetInt32("UserId", userId);
 
             var userDto = new UserDto
             {
@@ -95,5 +96,6 @@ namespace sistema_barbearia.Controllers
                 RedirectUrl = userId == 2 ? "/Listagem" : "/ListagemClientes"
             });
         }
+
     }
 }

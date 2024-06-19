@@ -51,11 +51,18 @@ namespace sistema_barberia.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Agendamento>> Create([FromBody] CreateAgendamentoDto agendamentoDto, [FromQuery] int userId)
+        public async Task<ActionResult<Agendamento>> Create([FromBody] CreateAgendamentoDto agendamentoDto)
         {
             try
             {
-                var createdAgendamento = await _agendamentoService.CreateAsync(agendamentoDto, userId);
+                var userId = HttpContext.Session.GetInt32("UserId");
+
+                if (!userId.HasValue)
+                {
+                    return Unauthorized("Usuário não autenticado");
+                }
+
+                var createdAgendamento = await _agendamentoService.CreateAsync(agendamentoDto, userId.Value);
                 return CreatedAtAction(nameof(GetById), new { id = createdAgendamento.Id }, new
                 {
                     UserId = createdAgendamento.UserId,

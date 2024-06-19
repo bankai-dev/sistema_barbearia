@@ -84,7 +84,9 @@
                     Password: password
                 }),
                 success: function (response) {
-                    console.log("Response Data:", response); 
+                    localStorage.setItem('token', response.user.token);
+                    localStorage.setItem('userId', response.user.id);
+                    
                     window.location.href = response.redirectUrl;
                 },
                 error: function (xhr, status, error) {

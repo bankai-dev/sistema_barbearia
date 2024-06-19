@@ -29,7 +29,20 @@ public class AgendamentoService : IAgendamentoService
 
     public async Task<Agendamento> CreateAsync(CreateAgendamentoDto agendamentoDto, int userId)
     {
-        // Verifica se o usuário cliente já possui um agendamento para o mesmo dia
+        if (agendamentoDto.Horario < DateTime.Now)
+        {
+             throw new InvalidOperationException("Não é possível agendar para um horário que já passou.");
+        }
+
+        var existingAgendamentoForTime = await _context.Agendamentos
+        .Where(a => a.Horario == agendamentoDto.Horario)
+        .FirstOrDefaultAsync();
+
+        if (existingAgendamentoForTime != null)
+        {
+            throw new InvalidOperationException("Já existe um agendamento para este horário.");
+        }
+
         var existingAgendamentoForUser = await _context.Agendamentos
             .Where(a => a.UserId == userId && a.Horario.Date == agendamentoDto.Horario.Date)
             .FirstOrDefaultAsync();
