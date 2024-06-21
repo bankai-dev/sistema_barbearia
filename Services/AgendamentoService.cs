@@ -21,6 +21,30 @@ public class AgendamentoService : IAgendamentoService
         return await _context.Agendamentos.Include(a => a.User).ToListAsync();
     }
 
+    public async Task<List<AgendamentoDto>> GetAllAsync2()
+    {
+        var agendamentos = await _context.Agendamentos
+            .Include(a => a.User)
+            .Select(a => new AgendamentoDto
+            {
+                Id = a.Id,
+                Nome = a.Nome,
+                TipoCorte = a.TipoCorte,
+                Preco = a.Preco,
+                Horario = a.Horario,
+                Usuario = new UserDto
+                {
+                    Id = a.User.Id,
+                    Username = a.User.UserName
+                },
+                CreatedAt = a.CreatedAt
+            })
+            .ToListAsync();
+
+        return agendamentos;
+    }
+
+
     public async Task<Agendamento> GetByIdAsync(int id)
     {
         var agendamento = await _context.Agendamentos.Include(a => a.User).FirstOrDefaultAsync(a => a.Id == id);
@@ -31,7 +55,7 @@ public class AgendamentoService : IAgendamentoService
     {
         if (agendamentoDto.Horario < DateTime.Now)
         {
-             throw new InvalidOperationException("Não é possível agendar para um horário que já passou.");
+            throw new InvalidOperationException("Não é possível agendar para um horário que já passou.");
         }
 
         var existingAgendamentoForTime = await _context.Agendamentos
@@ -70,7 +94,7 @@ public class AgendamentoService : IAgendamentoService
         };
 
 
-        UpdateStatus(agendamento);
+        // UpdateStatus(agendamento);
         _context.Agendamentos.Add(agendamento);
         await _context.SaveChangesAsync();
 
@@ -163,4 +187,8 @@ public class AgendamentoService : IAgendamentoService
         _context.SaveChanges();
     }
 
+    // Task<List<Agendamento>> IAgendamentoService.GetAllAsync2()
+    // {
+    //     throw new NotImplementedException();
+    // }
 }

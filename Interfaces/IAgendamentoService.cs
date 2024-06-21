@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 public interface IAgendamentoService
 {
     Task<List<Agendamento>> GetAllAsync();
+
+    Task<List<AgendamentoDto>> GetAllAsync2();
     Task<Agendamento> GetByIdAsync(int id);
     Task<Agendamento> CreateAsync(CreateAgendamentoDto agendamentoDto, int userId);
     Task<Agendamento> UpdateAsync(int id, Agendamento agendamento);

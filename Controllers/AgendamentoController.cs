@@ -39,8 +39,23 @@ namespace sistema_barberia.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Agendamento>>> GetAll()
         {
-            return await _agendamentoService.GetAllAsync();
+            var agendamentosDto = await _agendamentoService.GetAllAsync2();
+
+            // Convertendo AgendamentoDto para Agendamento
+            var agendamentos = agendamentosDto.Select(dto => new Agendamento
+            {
+                Id = dto.Id,
+                Nome = dto.Nome,
+                TipoCorte = dto.TipoCorte,
+                Preco = dto.Preco,
+                Horario = dto.Horario,
+                UserId = dto.Usuario.Id 
+                
+            }).ToList();
+
+            return agendamentos;
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Agendamento>> GetById(int id)
@@ -67,7 +82,6 @@ namespace sistema_barberia.Controllers
                 {
                     UserId = createdAgendamento.UserId,
                     UserName = createdAgendamento.User.UserName,
-                    AgendamentoId = createdAgendamento.Id,
                     Preco = createdAgendamento.Preco,
                     Status = createdAgendamento.Status
 
