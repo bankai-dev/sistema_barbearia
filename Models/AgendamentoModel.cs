@@ -44,8 +44,6 @@ namespace sistema_barbearia.Models
     public enum StatusAgendamento
     {
         Disponivel,
-        Andamento,
         Reservado,
-        Cancelado
     }
 }

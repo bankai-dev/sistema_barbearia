@@ -3,7 +3,7 @@ namespace sistema_barbearia.DTOs
 {
 
 
-    public class AgendamentoDto
+    public class ListAgendamentoDto
     {
         public int Id { get; set; }
         public string Nome { get; set; }

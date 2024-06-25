@@ -1,10 +1,6 @@
 {
   "Files": [
     {
-      "Id": "C:\\dev\\sistema_barbearia\\sistema_barbearia\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\sistema_barbearia.bundle.scp.css",
-      "PackagePath": "staticwebassets\\sistema_barbearia.bundle.scp.css"
-    },
-    {
       "Id": "C:\\dev\\sistema_barbearia\\sistema_barbearia\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
@@ -811,6 +807,34 @@
     {
       "Id": "C:\\dev\\sistema_barbearia\\sistema_barbearia\\wwwroot\\lib\\jquery\\jquery.slim.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\jquery.slim.min.map"
+    },
+    {
+      "Id": "C:\\dev\\sistema_barbearia\\sistema_barbearia\\wwwroot\\lib\\sweetalert2\\sweetalert2.all.js",
+      "PackagePath": "staticwebassets\\lib\\sweetalert2\\sweetalert2.all.js"
+    },
+    {
+      "Id": "C:\\dev\\sistema_barbearia\\sistema_barbearia\\wwwroot\\lib\\sweetalert2\\sweetalert2.all.min.js",
+      "PackagePath": "staticwebassets\\lib\\sweetalert2\\sweetalert2.all.min.js"
+    },
+    {
+      "Id": "C:\\dev\\sistema_barbearia\\sistema_barbearia\\wwwroot\\lib\\sweetalert2\\sweetalert2.css",
+      "PackagePath": "staticwebassets\\lib\\sweetalert2\\sweetalert2.css"
+    },
+    {
+      "Id": "C:\\dev\\sistema_barbearia\\sistema_barbearia\\wwwroot\\lib\\sweetalert2\\sweetalert2.d.ts",
+      "PackagePath": "staticwebassets\\lib\\sweetalert2\\sweetalert2.d.ts"
+    },
+    {
+      "Id": "C:\\dev\\sistema_barbearia\\sistema_barbearia\\wwwroot\\lib\\sweetalert2\\sweetalert2.js",
+      "PackagePath": "staticwebassets\\lib\\sweetalert2\\sweetalert2.js"
+    },
+    {
+      "Id": "C:\\dev\\sistema_barbearia\\sistema_barbearia\\wwwroot\\lib\\sweetalert2\\sweetalert2.min.css",
+      "PackagePath": "staticwebassets\\lib\\sweetalert2\\sweetalert2.min.css"
+    },
+    {
+      "Id": "C:\\dev\\sistema_barbearia\\sistema_barbearia\\wwwroot\\lib\\sweetalert2\\sweetalert2.min.js",
+      "PackagePath": "staticwebassets\\lib\\sweetalert2\\sweetalert2.min.js"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.sistema_barbearia.props",

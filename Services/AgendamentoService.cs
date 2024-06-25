@@ -21,13 +21,12 @@ public class AgendamentoService : IAgendamentoService
         return await _context.Agendamentos.Include(a => a.User).ToListAsync();
     }
 
-    public async Task<List<AgendamentoDto>> GetAllAsync2()
+    public async Task<List<ListAgendamentoDto>> GetAllAsync2()
     {
         var agendamentos = await _context.Agendamentos
             .Include(a => a.User)
-            .Select(a => new AgendamentoDto
+            .Select(a => new ListAgendamentoDto
             {
-                Id = a.Id,
                 Nome = a.Nome,
                 TipoCorte = a.TipoCorte,
                 Preco = a.Preco,
@@ -40,6 +39,8 @@ public class AgendamentoService : IAgendamentoService
                 CreatedAt = a.CreatedAt
             })
             .ToListAsync();
+
+        Console.WriteLine($"Total agendamentos encontrados: {agendamentos.Count}");   
 
         return agendamentos;
     }
@@ -94,7 +95,6 @@ public class AgendamentoService : IAgendamentoService
         };
 
 
-        // UpdateStatus(agendamento);
         _context.Agendamentos.Add(agendamento);
         await _context.SaveChangesAsync();
 
@@ -154,38 +154,38 @@ public class AgendamentoService : IAgendamentoService
     //     return agendamento;
     // }
 
-    public async Task<Agendamento> CancelAsync(int id)
-    {
-        var agendamento = await _context.Agendamentos.FindAsync(id);
-        if (agendamento == null) return null;
+    // public async Task<Agendamento> CancelAsync(int id)
+    // {
+    //     var agendamento = await _context.Agendamentos.FindAsync(id);
+    //     if (agendamento == null) return null;
 
-        agendamento.Status = DateTime.Now > agendamento.Horario ? StatusAgendamento.Cancelado : StatusAgendamento.Disponivel;
-        agendamento.UserId = null;
+    //     agendamento.Status = DateTime.Now > agendamento.Horario ? StatusAgendamento.Cancelado : StatusAgendamento.Disponivel;
+    //     agendamento.UserId = null;
 
-        UpdateStatus(agendamento);
-        _context.Agendamentos.Update(agendamento);
-        await _context.SaveChangesAsync();
-        return agendamento;
-    }
+    //     UpdateStatus(agendamento);
+    //     _context.Agendamentos.Update(agendamento);
+    //     await _context.SaveChangesAsync();
+    //     return agendamento;
+    // }
 
-    public void UpdateStatus(Agendamento agendamento)
-    {
-        var now = DateTime.Now;
-        var timeSpanUntilStart = agendamento.Horario.Subtract(now);
-        var timeSpanUntilEnd = agendamento.Horario.AddMinutes(30).Subtract(now);
+    // public void UpdateStatus(Agendamento agendamento)
+    // {
+    //     var now = DateTime.Now;
+    //     var timeSpanUntilStart = agendamento.Horario.Subtract(now);
+    //     var timeSpanUntilEnd = agendamento.Horario.AddMinutes(30).Subtract(now);
+        
+    //     if (agendamento.Status == StatusAgendamento.Reservado && timeSpanUntilStart.TotalMinutes <= 0 && timeSpanUntilEnd.TotalMinutes >= 0)
+    //     {
+    //         agendamento.Status = StatusAgendamento.Andamento;
+    //     }
+    //     else if (agendamento.Status == StatusAgendamento.Andamento && timeSpanUntilEnd.TotalMinutes < 0)
+    //     {
+    //         agendamento.Status = StatusAgendamento.Cancelado;
+    //     }
 
-        if (agendamento.Status == StatusAgendamento.Reservado && timeSpanUntilStart.TotalMinutes <= 0 && timeSpanUntilEnd.TotalMinutes >= 0)
-        {
-            agendamento.Status = StatusAgendamento.Andamento;
-        }
-        else if (agendamento.Status == StatusAgendamento.Andamento && timeSpanUntilEnd.TotalMinutes < 0)
-        {
-            agendamento.Status = StatusAgendamento.Cancelado;
-        }
-
-        _context.Agendamentos.Update(agendamento);
-        _context.SaveChanges();
-    }
+    //     _context.Agendamentos.Update(agendamento);
+    //     _context.SaveChanges();
+    // }
 
     // Task<List<Agendamento>> IAgendamentoService.GetAllAsync2()
     // {

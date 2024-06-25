@@ -7,13 +7,14 @@ public interface IAgendamentoService
 {
     Task<List<Agendamento>> GetAllAsync();
 
-    Task<List<AgendamentoDto>> GetAllAsync2();
+    Task<List<ListAgendamentoDto>> GetAllAsync2();
     Task<Agendamento> GetByIdAsync(int id);
     Task<Agendamento> CreateAsync(CreateAgendamentoDto agendamentoDto, int userId);
-    Task<Agendamento> UpdateAsync(int id, Agendamento agendamento);
+    // Task<Agendamento> UpdateAsync(int id, Agendamento agendamento);
     Task<bool> DeleteAsync(int id);
+    
     // Task<Agendamento> ReserveAsync(int id, int userId);
-    Task<Agendamento> CancelAsync(int id);
-    void UpdateStatus(Agendamento agendamento);
+    // Task<Agendamento> CancelAsync(int id);
+    // void UpdateStatus(Agendamento agendamento);
     decimal GetPrecoByTipoCorte(string tipoCorte);
 }

@@ -80,6 +80,7 @@ namespace sistema_barberia.Controllers
                 var createdAgendamento = await _agendamentoService.CreateAsync(agendamentoDto, userId.Value);
                 return CreatedAtAction(nameof(GetById), new { id = createdAgendamento.Id }, new
                 {
+                    createdAgendamento.Id,
                     UserId = createdAgendamento.UserId,
                     UserName = createdAgendamento.User.UserName,
                     Preco = createdAgendamento.Preco,
@@ -93,13 +94,13 @@ namespace sistema_barberia.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Agendamento>> Update(int id, Agendamento agendamento)
-        {
-            var updatedAgendamento = await _agendamentoService.UpdateAsync(id, agendamento);
-            if (updatedAgendamento == null) return NotFound();
-            return updatedAgendamento;
-        }
+        // [HttpPut("{id}")]
+        // public async Task<ActionResult<Agendamento>> Update(int id, Agendamento agendamento)
+        // {
+        //     var updatedAgendamento = await _agendamentoService.UpdateAsync(id, agendamento);
+        //     if (updatedAgendamento == null) return NotFound();
+        //     return updatedAgendamento;
+        // }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
@@ -117,26 +118,26 @@ namespace sistema_barberia.Controllers
         //     return agendamento;
         // }
 
-        [HttpPost("{id}/cancel")]
-        public async Task<ActionResult<Agendamento>> Cancel(int id)
-        {
-            var agendamento = await _agendamentoService.CancelAsync(id);
-            if (agendamento == null) return NotFound();
-            return agendamento;
-        }
+        // [HttpPost("{id}/cancel")]
+        // public async Task<ActionResult<Agendamento>> Cancel(int id)
+        // {
+        //     var agendamento = await _agendamentoService.CancelAsync(id);
+        //     if (agendamento == null) return NotFound();
+        //     return agendamento;
+        // }
 
         // AgendamentoController
 
-        [HttpGet("/UpdateStatus")]
-        public async Task<IActionResult> UpdateStatus()
-        {
-            var agendamentos = await _agendamentoService.GetAllAsync();
-            foreach (var agendamento in agendamentos)
-            {
-                _agendamentoService.UpdateStatus(agendamento);
-            }
-            return Ok("Status updated successfully.");
-        }
+        // [HttpGet("/UpdateStatus")]
+        // public async Task<IActionResult> UpdateStatus()
+        // {
+        //     var agendamentos = await _agendamentoService.GetAllAsync();
+        //     foreach (var agendamento in agendamentos)
+        //     {
+        //         _agendamentoService.UpdateStatus(agendamento);
+        //     }
+        //     return Ok("Status updated successfully.");
+        // }
 
         [HttpGet("GetPrecoByTipoCorte")]
         public ActionResult<decimal> GetPrecoByTipoCorte([FromQuery] string tipoCorte)
